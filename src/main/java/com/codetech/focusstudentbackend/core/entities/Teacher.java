@@ -2,11 +2,9 @@ package com.codetech.focusstudentbackend.core.entities;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import java.util.List;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity(name = "teacher")
 @Getter
@@ -14,7 +12,12 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @With
-public class Teacher extends User {
+@Builder
+public class Teacher {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
 
     @ManyToMany
     @JoinTable(
@@ -23,5 +26,8 @@ public class Teacher extends User {
             inverseJoinColumns = @JoinColumn(name = "course_id")
 
     )
-    private List<Course> courses;
+    private Set<Course> courses = new HashSet<>();
+
+    @ManyToOne
+    private User user;
 }

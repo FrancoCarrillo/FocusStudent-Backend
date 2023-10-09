@@ -3,9 +3,10 @@ package com.codetech.focusstudentbackend.core.entities;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity(name = "user")
-@Inheritance(strategy = InheritanceType.JOINED)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -28,5 +29,11 @@ public class User {
     @ManyToOne
     @JoinColumn(name = "role_id")
     private Role role;
+
+    @OneToMany(mappedBy = "user")
+    private Set<Teacher> teachers = new HashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    private Set<Student> students = new HashSet<>();
 
 }

@@ -4,10 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
 
-import javax.validation.constraints.Email;
-import javax.validation.constraints.Min;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
+import javax.validation.constraints.*;
 
 @Getter
 @Setter
@@ -23,15 +20,16 @@ public class RegisterUserRequest {
 
     @NotEmpty
     @NotNull
+    @Length(min = 9, max = 9, message = "El numero de telefono debe tener 9 dígitos")
     private String phoneNumber;
 
-    @Length(min = 8, max = 8, message = "DNI should be 8 characters")
+    @Length(min = 8, max = 8, message = "El número de DNI debe tener 8 dígitos")
     private String dni;
 
 
     @NotEmpty
     @NotNull
-    @Email(message = "Invalid email format")
+    @Email(message = "Formato de correo electrónico incorrecto")
     private String email;
 
     @NotEmpty
@@ -40,6 +38,8 @@ public class RegisterUserRequest {
 
     @NotEmpty
     @NotNull
-    @Length(min = 6, message = "Password should be at least 6 characters")
+    @Length(min = 6, message = "La contraseña debe tener 6 dígitos como mínimo")
     private String password;
+
+    private Long sectionId;
 }

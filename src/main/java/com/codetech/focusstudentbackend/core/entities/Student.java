@@ -2,10 +2,9 @@ package com.codetech.focusstudentbackend.core.entities;
 
 import lombok.*;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
-import java.util.List;
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity(name = "student")
 @Getter
@@ -13,10 +12,19 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @With
-public class Student extends User {
+@Builder
+public class Student {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    private Long id;
+
     @ManyToOne
     private Section section;
 
     @OneToMany(mappedBy = "student")
-    private List<Detector> detectors;
+    private Set<Detector> detectors = new HashSet<>();
+
+    @ManyToOne
+    private User user;
 }

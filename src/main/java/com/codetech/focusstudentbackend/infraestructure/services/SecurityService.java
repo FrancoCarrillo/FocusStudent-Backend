@@ -3,14 +3,14 @@ package com.codetech.focusstudentbackend.infraestructure.services;
 import com.codetech.focusstudentbackend.api.model.requests.LoginRequest;
 import com.codetech.focusstudentbackend.api.model.requests.RegisterUserRequest;
 import com.codetech.focusstudentbackend.api.model.responses.LogInResponse;
-import com.codetech.focusstudentbackend.core.entities.Role;
+import com.codetech.focusstudentbackend.core.entities.Section;
+import com.codetech.focusstudentbackend.core.entities.Student;
+import com.codetech.focusstudentbackend.core.entities.Teacher;
 import com.codetech.focusstudentbackend.core.entities.User;
-import com.codetech.focusstudentbackend.core.repositories.RolRepository;
-import com.codetech.focusstudentbackend.core.repositories.UserRepository;
+import com.codetech.focusstudentbackend.core.repositories.*;
 import com.codetech.focusstudentbackend.infraestructure.interfaces.ISecurityService;
 import com.codetech.focusstudentbackend.utils.exceptions.NotFoundException;
 import com.codetech.focusstudentbackend.utils.security.jwt.JwtTokenUtil;
-import com.sun.jdi.InternalException;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -22,8 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
-import java.util.HashSet;
-import java.util.Objects;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -37,6 +35,9 @@ public class SecurityService implements ISecurityService {
     private final AuthenticationManager authManager;
     private final UserRepository userRepository;
     private final RolRepository rolRepository;
+    private final TeacherRepository teacherRepository;
+    private final StudentRepository studentRepository;
+    private final SectionRepository sectionRepository;
     private final PasswordEncoder encoder;
     private final JwtTokenUtil jwtTokenUtil;
     private final Validator validator;
@@ -51,7 +52,7 @@ public class SecurityService implements ISecurityService {
 
         User user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow();
 
-        return new LogInResponse(user.getId(), jwt, user.getRole().getName());
+        return new LogInResponse(user.getId(), user.getNames(), jwt, user.getRole().getName());
     }
 
     @Override
@@ -72,6 +73,9 @@ public class SecurityService implements ISecurityService {
             throw new NotFoundException("El DNI ya esta en uso");
         }
 
+        if (Boolean.TRUE.equals(userRepository.existsByPhoneNumber(registerUserRequest.getPhoneNumber()))) {
+            throw new NotFoundException("El número de telefono ya esta en uso");
+        }
 
         User user = User.builder()
                 .names(registerUserRequest.getNames())
@@ -90,18 +94,45 @@ public class SecurityService implements ISecurityService {
         if (!matcher.find(1))
             throw new NotFoundException("El email no es valido");
 
+
         String userRole = matcher.group(1);
 
         switch (userRole) {
-            case "estudiante" -> user.setRole(rolRepository.findByName("STUDENT"));
-            case "profesor" -> user.setRole(rolRepository.findByName("TEACHER"));
-            case "admin" -> user.setRole(rolRepository.findByName("ADMIN"));
-            default -> {
-                throw new NotFoundException("El email no es valido");
+            case "estudiante" -> {
+
+                if (registerUserRequest.getSectionId() == null) {
+                    throw new NotFoundException("La seccion debe ser ingresada");
+                }
+
+                user.setRole(rolRepository.findByName("STUDENT"));
+
+                User newUser = userRepository.save(user);
+                Section studentSection = sectionRepository.findById(registerUserRequest.getSectionId()).orElseThrow(() -> new NotFoundException("La seccion no existe"));
+
+                Student student = Student.builder()
+                        .section(studentSection)
+                        .user(newUser).build();
+
+                studentRepository.save(student);
+
             }
+            case "profesor" -> {
+                user.setRole(rolRepository.findByName("TEACHER"));
+
+                User newUser = userRepository.save(user);
+
+                Teacher teacher = Teacher.builder()
+                        .user(newUser)
+                        .build();
+
+
+                teacherRepository.save(teacher);
+            }
+            default -> throw new NotFoundException("El email no es valido");
+
         }
 
-        userRepository.save(user);
+
 
         return "Registro de usuario exitoso!";
     }
