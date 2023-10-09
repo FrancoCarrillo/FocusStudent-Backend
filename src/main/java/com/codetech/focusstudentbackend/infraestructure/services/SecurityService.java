@@ -91,7 +91,7 @@ public class SecurityService implements ISecurityService {
             throw new NotFoundException("El email no es valido");
 
         String userRole = matcher.group(1);
-        
+
         switch (userRole) {
             case "estudiante" -> user.setRole(rolRepository.findByName("STUDENT"));
             case "profesor" -> user.setRole(rolRepository.findByName("TEACHER"));

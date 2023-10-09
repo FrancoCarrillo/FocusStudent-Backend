@@ -3,8 +3,7 @@ package com.codetech.focusstudentbackend.core.entities;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.List;
 
 @Entity(name = "course")
 @Getter
@@ -18,10 +17,20 @@ public class Course {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String grade;
-    private String section;
     private Integer year;
+    private String description;
 
     @ManyToMany(mappedBy = "courses")
-    public Set<User> users = new HashSet<>();
+    public List<Teacher> teachers;
+
+    @ManyToMany
+    @JoinTable(
+            name = "course_section",
+            joinColumns = @JoinColumn(name = "course_id"),
+            inverseJoinColumns = @JoinColumn(name = "section_id")
+    )
+    private List<Section> sections;
+
+    @OneToMany(mappedBy = "course")
+    private List<Lesson> lessons;
 }

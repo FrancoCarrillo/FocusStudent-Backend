@@ -3,10 +3,9 @@ package com.codetech.focusstudentbackend.core.entities;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity(name = "user")
+@Inheritance(strategy = InheritanceType.JOINED)
 @Getter
 @Setter
 @NoArgsConstructor
@@ -25,13 +24,6 @@ public class User {
     private String address;
     private String password;
 
-
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "user_course",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "course_id")
-    )
-    private Set<Course> courses = new HashSet<>();
 
     @ManyToOne
     @JoinColumn(name = "role_id")
