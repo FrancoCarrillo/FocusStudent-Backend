@@ -15,10 +15,6 @@ public class RegisterUserRequest {
 
     @NotEmpty
     @NotNull
-    private String username;
-
-    @NotEmpty
-    @NotNull
     private String names;
 
     @NotEmpty
@@ -27,15 +23,20 @@ public class RegisterUserRequest {
 
     @NotEmpty
     @NotNull
-    @Email(message = "Invalid email format")
-    private String email;
-
-    @NotNull
-    @Min(value = 18, message = "Age should not be less than 18")
-    private Integer age;
+    private String phoneNumber;
 
     @Length(min = 8, max = 8, message = "DNI should be 8 characters")
     private String dni;
+
+
+    @NotEmpty
+    @NotNull
+    @Email(message = "Invalid email format")
+    private String email;
+
+    @NotEmpty
+    @NotNull
+    private String address;
 
     @NotEmpty
     @NotNull

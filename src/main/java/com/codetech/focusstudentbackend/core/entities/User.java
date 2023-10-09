@@ -13,33 +13,28 @@ import java.util.Set;
 @AllArgsConstructor
 @With
 @Builder
-public class UserEntity {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-    private String username;
     private String names;
     private String lastNames;
-    private String email;
-    private Integer age;
+    private String phoneNumber;
     private String dni;
+    private String email;
+    private String address;
     private String password;
 
 
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(name = "user_rol",
+    @JoinTable(name = "user_course",
             joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "rol_id")
+            inverseJoinColumns = @JoinColumn(name = "course_id")
     )
-    private Set<RoleEntity> roles = new HashSet<>();
+    private Set<Course> courses = new HashSet<>();
 
-    public Set<String> getRolName() {
-        Set<String> rolesName = new HashSet<>();
+    @ManyToOne
+    @JoinColumn(name = "role_id")
+    private Role role;
 
-        roles.forEach(role -> {
-            rolesName.add(role.getName());
-        });
-
-        return rolesName;
-    }
 }

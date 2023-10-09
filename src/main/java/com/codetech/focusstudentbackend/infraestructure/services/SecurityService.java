@@ -3,8 +3,8 @@ package com.codetech.focusstudentbackend.infraestructure.services;
 import com.codetech.focusstudentbackend.api.model.requests.LoginRequest;
 import com.codetech.focusstudentbackend.api.model.requests.RegisterUserRequest;
 import com.codetech.focusstudentbackend.api.model.responses.LogInResponse;
-import com.codetech.focusstudentbackend.core.entities.RoleEntity;
-import com.codetech.focusstudentbackend.core.entities.UserEntity;
+import com.codetech.focusstudentbackend.core.entities.Role;
+import com.codetech.focusstudentbackend.core.entities.User;
 import com.codetech.focusstudentbackend.core.repositories.RolRepository;
 import com.codetech.focusstudentbackend.core.repositories.UserRepository;
 import com.codetech.focusstudentbackend.infraestructure.interfaces.ISecurityService;
@@ -25,6 +25,8 @@ import javax.validation.Validator;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Transactional
@@ -42,14 +44,14 @@ public class SecurityService implements ISecurityService {
     @Override
     public LogInResponse login(LoginRequest loginRequest) {
         Authentication authentication = authManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtTokenUtil.generateJwtToken(authentication);
 
-        UserEntity user = userRepository.findByUsername(loginRequest.getUsername()).orElseThrow();
+        User user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow();
 
-        return new LogInResponse(jwt, user.getId());
+        return new LogInResponse(user.getId(), jwt, user.getRole().getName());
     }
 
     @Override
@@ -61,48 +63,42 @@ public class SecurityService implements ISecurityService {
             throw new NotFoundException(violations.stream().map(ConstraintViolation::getMessage)
                     .collect(Collectors.joining(", ")));
 
-        if (userRepository.existsByUsername(registerUserRequest.getUsername())) {
-            throw new NotFoundException("EL username ya esta en uso");
-        }
 
-        if (userRepository.existsByEmail(registerUserRequest.getEmail())) {
+        if (Boolean.TRUE.equals(userRepository.existsByEmail(registerUserRequest.getEmail()))) {
             throw new NotFoundException("El email ya esta en uso");
         }
 
-        if (userRepository.existsByDni(registerUserRequest.getDni())) {
+        if (Boolean.TRUE.equals(userRepository.existsByDni(registerUserRequest.getDni()))) {
             throw new NotFoundException("El DNI ya esta en uso");
         }
 
-        RoleEntity rol = rolRepository.findByName("USER");
 
-        if (rol == null) {
-            throw new NotFoundException("Rol doesn't exist");
-        }
-
-        UserEntity user = UserEntity.builder()
-                .username(registerUserRequest.getUsername())
+        User user = User.builder()
                 .names(registerUserRequest.getNames())
                 .lastNames(registerUserRequest.getLastNames())
-                .email(registerUserRequest.getEmail())
-                .age(registerUserRequest.getAge())
+                .phoneNumber(registerUserRequest.getPhoneNumber())
                 .dni(registerUserRequest.getDni())
+                .email(registerUserRequest.getEmail())
+                .address(registerUserRequest.getAddress())
                 .password(encoder.encode(registerUserRequest.getPassword()))
                 .build();
 
-        Set<RoleEntity> roles = new HashSet<>();
-        roles.add(rol);
 
-        user.setRoles(roles);
+        Pattern pattern = Pattern.compile("_(.*?)@");
+        Matcher matcher = pattern.matcher(user.getEmail());
 
-        if (Objects.equals(registerUserRequest.getUsername(), "admin")) {
+        if (!matcher.find(1))
+            throw new NotFoundException("El email no es valido");
 
-            RoleEntity adminRol = rolRepository.findByName("ADMIN");
-
-            if (adminRol == null) {
-                throw new NotFoundException("Rol doesn't exist");
+        String userRole = matcher.group(1);
+        
+        switch (userRole) {
+            case "estudiante" -> user.setRole(rolRepository.findByName("STUDENT"));
+            case "profesor" -> user.setRole(rolRepository.findByName("TEACHER"));
+            case "admin" -> user.setRole(rolRepository.findByName("ADMIN"));
+            default -> {
+                throw new NotFoundException("El email no es valido");
             }
-
-            roles.add(adminRol);
         }
 
         userRepository.save(user);
@@ -110,31 +106,4 @@ public class SecurityService implements ISecurityService {
         return "Registro de usuario exitoso!";
     }
 
-    @Override
-    public String addRoleAdmin(Long user_id) {
-        UserEntity user = userRepository.findById(user_id).orElseThrow(() -> new NotFoundException("User not found"));
-
-        RoleEntity rol = rolRepository.findByName("ADMIN");
-
-        if (rol == null) {
-            throw new NotFoundException("Rol doesn't exist");
-        }
-
-        user.getRoles().forEach(role -> {
-            if (role.getName().equals("ADMIN")) {
-                throw new NotFoundException("El usuario ya tiene el rol de admin");
-            }
-        });
-
-        try {
-            user.getRoles().add(rol);
-            userRepository.save(user);
-
-        } catch (Exception e) {
-            throw new InternalException("Problem adding admin role");
-        }
-
-
-        return "Admin role added successfully!";
-    }
 }
