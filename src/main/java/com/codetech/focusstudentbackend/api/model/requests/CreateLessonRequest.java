@@ -8,16 +8,9 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-public class CreateCourserRequest {
-
-    @NotNull
-    private Integer year;
+public class CreateLessonRequest {
 
     @NotEmpty
     @NotNull
-    private String name;
-
-    @NotEmpty
-    @NotNull
-    private String description;
+    private Long courseId;
 }

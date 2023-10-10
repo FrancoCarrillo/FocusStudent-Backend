@@ -8,7 +8,7 @@ import javax.validation.constraints.*;
 
 @Getter
 @Setter
-public class RegisterUserRequest {
+public class CreateUserRequest {
 
     @NotEmpty
     @NotNull

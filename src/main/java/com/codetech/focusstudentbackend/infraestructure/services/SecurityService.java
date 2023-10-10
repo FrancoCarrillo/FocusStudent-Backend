@@ -1,7 +1,7 @@
 package com.codetech.focusstudentbackend.infraestructure.services;
 
 import com.codetech.focusstudentbackend.api.model.requests.LoginRequest;
-import com.codetech.focusstudentbackend.api.model.requests.RegisterUserRequest;
+import com.codetech.focusstudentbackend.api.model.requests.CreateUserRequest;
 import com.codetech.focusstudentbackend.api.model.responses.LogInResponse;
 import com.codetech.focusstudentbackend.core.entities.Section;
 import com.codetech.focusstudentbackend.core.entities.Student;
@@ -56,35 +56,35 @@ public class SecurityService implements ISecurityService {
     }
 
     @Override
-    public String register(RegisterUserRequest registerUserRequest) {
+    public String register(CreateUserRequest createUserRequest) {
 
-        Set<ConstraintViolation<RegisterUserRequest>> violations = validator.validate(registerUserRequest);
+        Set<ConstraintViolation<CreateUserRequest>> violations = validator.validate(createUserRequest);
 
         if (!violations.isEmpty())
             throw new NotFoundException(violations.stream().map(ConstraintViolation::getMessage)
                     .collect(Collectors.joining(", ")));
 
 
-        if (Boolean.TRUE.equals(userRepository.existsByEmail(registerUserRequest.getEmail()))) {
+        if (Boolean.TRUE.equals(userRepository.existsByEmail(createUserRequest.getEmail()))) {
             throw new NotFoundException("El email ya esta en uso");
         }
 
-        if (Boolean.TRUE.equals(userRepository.existsByDni(registerUserRequest.getDni()))) {
+        if (Boolean.TRUE.equals(userRepository.existsByDni(createUserRequest.getDni()))) {
             throw new NotFoundException("El DNI ya esta en uso");
         }
 
-        if (Boolean.TRUE.equals(userRepository.existsByPhoneNumber(registerUserRequest.getPhoneNumber()))) {
+        if (Boolean.TRUE.equals(userRepository.existsByPhoneNumber(createUserRequest.getPhoneNumber()))) {
             throw new NotFoundException("El número de telefono ya esta en uso");
         }
 
         User user = User.builder()
-                .names(registerUserRequest.getNames())
-                .lastNames(registerUserRequest.getLastNames())
-                .phoneNumber(registerUserRequest.getPhoneNumber())
-                .dni(registerUserRequest.getDni())
-                .email(registerUserRequest.getEmail())
-                .address(registerUserRequest.getAddress())
-                .password(encoder.encode(registerUserRequest.getPassword()))
+                .names(createUserRequest.getNames())
+                .lastNames(createUserRequest.getLastNames())
+                .phoneNumber(createUserRequest.getPhoneNumber())
+                .dni(createUserRequest.getDni())
+                .email(createUserRequest.getEmail())
+                .address(createUserRequest.getAddress())
+                .password(encoder.encode(createUserRequest.getPassword()))
                 .build();
 
 
@@ -100,14 +100,14 @@ public class SecurityService implements ISecurityService {
         switch (userRole) {
             case "estudiante" -> {
 
-                if (registerUserRequest.getSectionId() == null) {
+                if (createUserRequest.getSectionId() == null) {
                     throw new NotFoundException("La seccion debe ser ingresada");
                 }
 
                 user.setRole(rolRepository.findByName("STUDENT"));
 
                 User newUser = userRepository.save(user);
-                Section studentSection = sectionRepository.findById(registerUserRequest.getSectionId()).orElseThrow(() -> new NotFoundException("La seccion no existe"));
+                Section studentSection = sectionRepository.findById(createUserRequest.getSectionId()).orElseThrow(() -> new NotFoundException("La seccion no existe"));
 
                 Student student = Student.builder()
                         .section(studentSection)
@@ -131,8 +131,6 @@ public class SecurityService implements ISecurityService {
             default -> throw new NotFoundException("El email no es valido");
 
         }
-
-
 
         return "Registro de usuario exitoso!";
     }

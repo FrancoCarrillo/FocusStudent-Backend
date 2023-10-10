@@ -4,6 +4,7 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
+import java.util.Set;
 
 @Entity(name = "lesson")
 @Getter
@@ -21,5 +22,5 @@ public class Lesson {
     private Course course;
 
     @OneToMany(mappedBy = "lesson")
-    private List<Detector> detectors;
+    private Set<Detector> detectors;
 }

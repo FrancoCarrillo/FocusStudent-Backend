@@ -8,8 +8,7 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
-public class CreateCourserRequest {
-
+public class UpdateCourseRequest {
     @NotNull
     private Integer year;
 

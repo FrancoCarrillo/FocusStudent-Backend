@@ -1,7 +1,7 @@
 package com.codetech.focusstudentbackend.api.controller;
 
 import com.codetech.focusstudentbackend.api.model.requests.LoginRequest;
-import com.codetech.focusstudentbackend.api.model.requests.RegisterUserRequest;
+import com.codetech.focusstudentbackend.api.model.requests.CreateUserRequest;
 import com.codetech.focusstudentbackend.api.model.responses.LogInResponse;
 import com.codetech.focusstudentbackend.api.model.responses.MessageResponse;
 import com.codetech.focusstudentbackend.infraestructure.interfaces.ISecurityService;
@@ -27,7 +27,7 @@ public class UserController {
 
     @Operation(summary = "Register in system")
     @PostMapping("auth/register")
-    public ResponseEntity<MessageResponse> register(@RequestBody RegisterUserRequest signUpRequest) {
+    public ResponseEntity<MessageResponse> register(@RequestBody CreateUserRequest signUpRequest) {
         return ResponseEntity.ok(new MessageResponse(securityService.register(signUpRequest)));
     }
 
