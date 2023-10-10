@@ -9,7 +9,6 @@ import com.codetech.focusstudentbackend.core.repositories.CourseRepository;
 import com.codetech.focusstudentbackend.core.repositories.SectionRepository;
 import com.codetech.focusstudentbackend.infraestructure.interfaces.ISectionService;
 import com.codetech.focusstudentbackend.utils.exceptions.NotFoundException;
-import com.sun.jdi.InternalException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -50,28 +49,28 @@ public class SectionService implements ISectionService {
         return "Seccion creada con exito!";
     }
 
-    @Transactional
     @Override
     public String addCourseToSection(Long sectionId, AddCourseToSection request) {
 
         Section section = sectionRepository.findById(sectionId).orElseThrow(() -> new NotFoundException("Seccion no encontrada"));
 
-        Course courses = courseRepository.findById(request.getCourseIds()).orElseThrow(() -> new NotFoundException("Curso no encontrado"));
+        request.getCourseIds().forEach(courseId -> {
+            if (!courseRepository.existsById(courseId)) {
+                throw new NotFoundException("El curso con id " + courseId + " no existe");
+            }
+        });
 
-//        section.getCourses().forEach(course -> {
-//            if (courses.contains(course)) {
-//                throw new NotFoundException("El curso ya esta en la seccion");
-//            }
-//        });
+        List<Course> courses = courseRepository.findAllById(request.getCourseIds());
 
+        section.getCourses().forEach(course -> {
+            if (courses.contains(course)) {
+                throw new NotFoundException("El curso " + course.getName() +"ya esta en la seccion");
+            }
+        });
 
-        try {
-            section.getCourses().add(courses);
-            sectionRepository.save(section);
+        section.getCourses().addAll(courses);
 
-        } catch (Exception e) {
-            throw new InternalException("Problem adding course to section");
-        }
+        sectionRepository.save(section);
 
         return "Cursos agregados con exito!";
     }

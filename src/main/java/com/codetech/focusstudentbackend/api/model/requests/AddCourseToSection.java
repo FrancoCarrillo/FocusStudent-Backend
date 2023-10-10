@@ -9,5 +9,5 @@ import java.util.List;
 @Setter
 public class AddCourseToSection {
 
-    Long courseIds;
+    List<Long> courseIds;
 }

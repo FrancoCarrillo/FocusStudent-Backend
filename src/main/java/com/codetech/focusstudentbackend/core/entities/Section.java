@@ -3,7 +3,9 @@ package com.codetech.focusstudentbackend.core.entities;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity(name = "section")
 @Getter
@@ -21,8 +23,13 @@ public class Section {
     private String name;
 
     @OneToMany(mappedBy = "section")
-    private List<Student> students;
+    private Set<Student> students = new HashSet<>();
 
-    @ManyToMany(mappedBy = "sections")
-    private List<Course> courses;
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinTable(
+            name = "course_section",
+            joinColumns = @JoinColumn(name = "section_id"),
+            inverseJoinColumns = @JoinColumn(name = "course_id")
+    )
+    private Set<Course> courses = new HashSet<>();
 }
