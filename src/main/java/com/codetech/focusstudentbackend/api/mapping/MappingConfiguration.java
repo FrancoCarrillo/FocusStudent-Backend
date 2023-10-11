@@ -20,4 +20,9 @@ public class MappingConfiguration {
     public CourseSectionMapper courseSectionMapper() {
         return new CourseSectionMapper();
     }
+
+    @Bean
+    public StudentMapper studentMapper() {
+        return new StudentMapper();
+    }
 }
