@@ -34,4 +34,9 @@ public class CourseSectionController {
         return ResponseEntity.ok(courseSectionService.getAllByTeacherId(teacherId));
     }
 
+    @GetMapping("/section/{sectionId}")
+    public ResponseEntity<List<CourseSectionResponse>> getAllBySectionId(@PathVariable Long sectionId) {
+        return ResponseEntity.ok(courseSectionService.getAllBySectionId(sectionId));
+    }
+
 }

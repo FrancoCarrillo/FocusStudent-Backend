@@ -4,6 +4,7 @@ import com.codetech.focusstudentbackend.api.mapping.CourseSectionMapper;
 import com.codetech.focusstudentbackend.api.model.requests.CreateCourseSectionRequest;
 import com.codetech.focusstudentbackend.api.model.requests.UpdateCourseRequest;
 import com.codetech.focusstudentbackend.api.model.requests.UpdateCourseSectionRequest;
+import com.codetech.focusstudentbackend.api.model.responses.CourseResponse;
 import com.codetech.focusstudentbackend.api.model.responses.CourseSectionResponse;
 import com.codetech.focusstudentbackend.core.entities.Course;
 import com.codetech.focusstudentbackend.core.entities.CourseSection;
@@ -84,5 +85,10 @@ public class CourseSectionService implements ICourseSectionService {
     @Override
     public List<CourseSectionResponse> getAllByTeacherId(Long teacherId) {
         return courseSectionMapper.modelToList(courseSectionRepository.findAllByTeacherId(teacherId));
+    }
+
+    @Override
+    public List<CourseSectionResponse> getAllBySectionId(Long sectionId) {
+        return courseSectionMapper.modelToList(courseSectionRepository.findAllBySectionId(sectionId));
     }
 }
