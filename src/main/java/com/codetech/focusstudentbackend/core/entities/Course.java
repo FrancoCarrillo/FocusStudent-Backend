@@ -23,16 +23,8 @@ public class Course {
     private Integer year;
     private String description;
 
-    @ManyToMany(mappedBy = "courses")
-    public List<Teacher> teachers;
-
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "course_section",
-            joinColumns = @JoinColumn(name = "course_id"),
-            inverseJoinColumns = @JoinColumn(name = "section_id")
-    )
-    private Set<Section> sections = new HashSet<>();
+    @OneToMany(mappedBy = "course")
+    private Set<CourseSection> courseSections = new HashSet<>();
 
     @OneToMany(mappedBy = "course")
     private List<Lesson> lessons;

@@ -16,4 +16,6 @@ public interface ICourseService {
     CourseResponse update(Long courseId, UpdateCourseRequest request);
 
     String delete(Long courseId);
+
+    List<CourseResponse> getCoursesByTeacherId(Long teacherId);
 }

@@ -2,6 +2,8 @@ package com.codetech.focusstudentbackend.infraestructure.services;
 
 import com.codetech.focusstudentbackend.api.model.requests.AddCourseToSection;
 import com.codetech.focusstudentbackend.api.model.requests.CreateSectionRequest;
+import com.codetech.focusstudentbackend.api.model.requests.UpdateSectionRequest;
+import com.codetech.focusstudentbackend.api.model.responses.SectionResponse;
 import com.codetech.focusstudentbackend.core.entities.Course;
 import com.codetech.focusstudentbackend.core.entities.Section;
 import com.codetech.focusstudentbackend.core.repositories.CourseRepository;
@@ -28,6 +30,16 @@ public class SectionService implements ISectionService {
     private final Validator validator;
 
     @Override
+    public List<SectionResponse> getAll() {
+        return null;
+    }
+
+    @Override
+    public SectionResponse getById(Long sectionId) {
+        return null;
+    }
+
+    @Override
     public String create(CreateSectionRequest request) {
         Set<ConstraintViolation<CreateSectionRequest>> violations = validator.validate(request);
 
@@ -49,29 +61,13 @@ public class SectionService implements ISectionService {
     }
 
     @Override
-    public String addCourseToSection(Long sectionId, AddCourseToSection request) {
+    public SectionResponse update(Long courseId, UpdateSectionRequest request) {
+        return null;
+    }
 
-        Section section = sectionRepository.findById(sectionId).orElseThrow(() -> new NotFoundException("Seccion no encontrada"));
-
-        request.getCourseIds().forEach(courseId -> {
-            if (!courseRepository.existsById(courseId)) {
-                throw new NotFoundException("El curso con id " + courseId + " no existe");
-            }
-        });
-
-        List<Course> courses = courseRepository.findAllById(request.getCourseIds());
-
-        section.getCourses().forEach(course -> {
-            if (courses.contains(course)) {
-                throw new NotFoundException("El curso " + course.getName() +"ya esta en la seccion");
-            }
-        });
-
-        section.getCourses().addAll(courses);
-
-        sectionRepository.save(section);
-
-        return "Cursos agregados con exito!";
+    @Override
+    public String delete(Long sectionId) {
+        return null;
     }
 
 }

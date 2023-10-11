@@ -1,5 +1,6 @@
 package com.codetech.focusstudentbackend.api.model.requests;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
@@ -8,6 +9,7 @@ import javax.validation.constraints.*;
 
 @Getter
 @Setter
+@Builder
 public class CreateUserRequest {
 
     @NotEmpty

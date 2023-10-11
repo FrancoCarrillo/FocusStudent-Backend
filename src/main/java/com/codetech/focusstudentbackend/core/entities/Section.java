@@ -25,11 +25,6 @@ public class Section {
     @OneToMany(mappedBy = "section")
     private Set<Student> students = new HashSet<>();
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JoinTable(
-            name = "course_section",
-            joinColumns = @JoinColumn(name = "section_id"),
-            inverseJoinColumns = @JoinColumn(name = "course_id")
-    )
-    private Set<Course> courses = new HashSet<>();
+    @OneToMany(mappedBy = "section")
+    private Set<CourseSection> courses = new HashSet<>();
 }

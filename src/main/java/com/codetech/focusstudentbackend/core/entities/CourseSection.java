@@ -3,25 +3,27 @@ package com.codetech.focusstudentbackend.core.entities;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.HashSet;
-import java.util.Set;
 
-@Entity(name = "teacher")
+@Entity(name = "course_section")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @With
 @Builder
-public class Teacher {
+public class CourseSection {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+    public Long id;
 
-    @OneToMany(mappedBy = "teacher")
-    private Set<CourseSection> courseSections = new HashSet<>();
 
     @ManyToOne
-    private User user;
+    public Course course;
+
+    @ManyToOne
+    public Section section;
+
+    @ManyToOne
+    public Teacher teacher;
 }

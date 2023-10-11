@@ -93,4 +93,10 @@ public class CourseService implements ICourseService {
 
         return "Curso eliminado con exito!";
     }
+
+    @Override
+    public List<CourseResponse> getCoursesByTeacherId(Long teacherId) {
+
+        return null;
+    }
 }

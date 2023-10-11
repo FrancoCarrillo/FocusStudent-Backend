@@ -24,9 +24,4 @@ public class SectionController {
         return ResponseEntity.ok(new MessageResponse(sectionService.create(request)));
     }
 
-    @Operation(summary = "Add a course to a section")
-    @PatchMapping("{sectionId}/course")
-    public ResponseEntity<MessageResponse> addCourseToSection(@PathVariable Long sectionId, @RequestBody AddCourseToSection request) {
-        return ResponseEntity.ok(new MessageResponse(sectionService.addCourseToSection(sectionId, request)));
-    }
 }
