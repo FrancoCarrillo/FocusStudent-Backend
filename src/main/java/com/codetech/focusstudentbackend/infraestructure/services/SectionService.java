@@ -2,7 +2,6 @@ package com.codetech.focusstudentbackend.infraestructure.services;
 
 import com.codetech.focusstudentbackend.api.model.requests.AddCourseToSection;
 import com.codetech.focusstudentbackend.api.model.requests.CreateSectionRequest;
-import com.codetech.focusstudentbackend.api.model.responses.AddCourseToSectionResponse;
 import com.codetech.focusstudentbackend.core.entities.Course;
 import com.codetech.focusstudentbackend.core.entities.Section;
 import com.codetech.focusstudentbackend.core.repositories.CourseRepository;

@@ -1,7 +1,9 @@
 package com.codetech.focusstudentbackend.infraestructure.services;
 
+import com.codetech.focusstudentbackend.api.mapping.CourseMapper;
 import com.codetech.focusstudentbackend.api.model.requests.CreateCourserRequest;
 import com.codetech.focusstudentbackend.api.model.requests.UpdateCourseRequest;
+import com.codetech.focusstudentbackend.api.model.responses.CourseResponse;
 import com.codetech.focusstudentbackend.api.model.responses.UpdateCourseResponse;
 import com.codetech.focusstudentbackend.core.entities.Course;
 import com.codetech.focusstudentbackend.core.repositories.CourseRepository;
@@ -13,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -23,6 +26,20 @@ public class CourseService implements ICourseService {
 
     private final CourseRepository courseRepository;
     private final Validator validator;
+    private final CourseMapper courseMapper;
+
+    @Override
+    public List<CourseResponse> getAll() {
+        return courseMapper.modelToList(courseRepository.findAll());
+    }
+
+    @Override
+    public CourseResponse getById(Long courseId) {
+
+        Course course = courseRepository.findById(courseId).orElseThrow(() -> new NotFoundException("Curso no encontrado con el id: " + courseId));
+
+        return courseMapper.toResponse(course);
+    }
 
     @Override
     public String create(CreateCourserRequest request) {

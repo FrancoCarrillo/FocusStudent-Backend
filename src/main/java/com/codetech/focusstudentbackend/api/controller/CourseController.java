@@ -1,19 +1,18 @@
 package com.codetech.focusstudentbackend.api.controller;
 
-import com.codetech.focusstudentbackend.api.model.requests.AddCourseToSection;
 import com.codetech.focusstudentbackend.api.model.requests.CreateCourserRequest;
-import com.codetech.focusstudentbackend.api.model.requests.CreateSectionRequest;
 import com.codetech.focusstudentbackend.api.model.requests.UpdateCourseRequest;
+import com.codetech.focusstudentbackend.api.model.responses.CourseResponse;
 import com.codetech.focusstudentbackend.api.model.responses.MessageResponse;
 import com.codetech.focusstudentbackend.api.model.responses.UpdateCourseResponse;
-import com.codetech.focusstudentbackend.core.entities.Course;
-import com.codetech.focusstudentbackend.core.entities.Section;
 import com.codetech.focusstudentbackend.infraestructure.interfaces.ICourseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("api/course")
@@ -22,6 +21,19 @@ import org.springframework.web.bind.annotation.*;
 public class CourseController {
 
     private final ICourseService courseService;
+
+    @Operation(summary = "Get all the courses")
+    @GetMapping()
+    public ResponseEntity<List<CourseResponse>> getAll() {
+        return ResponseEntity.ok(courseService.getAll());
+    }
+
+    @Operation(summary = "Get course by ID")
+    @GetMapping("/{courseId}")
+    public ResponseEntity<CourseResponse> getById(@PathVariable Long courseId) {
+        return ResponseEntity.ok(courseService.getById(courseId));
+    }
+
     @Operation(summary = "Create a course")
     @PostMapping()
     public ResponseEntity<MessageResponse> create(@RequestBody CreateCourserRequest request) {
