@@ -5,12 +5,10 @@ import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
-import java.util.Date;
 
 @Getter
 @Setter
-public class CreateDetectorRequest {
-
+public class UpdateDetectorRequest {
     @NotEmpty
     @NotNull
     private String initialState;
@@ -22,9 +20,6 @@ public class CreateDetectorRequest {
     @NotEmpty
     @NotNull
     private String finalState;
-
-    @NotNull
-    private Date detectionDate;
 
     @NotNull
     private Long studentId;

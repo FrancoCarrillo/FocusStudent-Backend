@@ -7,6 +7,13 @@ import org.springframework.context.annotation.Configuration;
 public class MappingConfiguration {
 
     @Bean
-    public CourseMapper courseMapper() { return new CourseMapper();}
+    public CourseMapper courseMapper() {
+        return new CourseMapper();
+    }
+
+    @Bean
+    public DetectorMapper detectorMapper() {
+        return new DetectorMapper();
+    }
 
 }

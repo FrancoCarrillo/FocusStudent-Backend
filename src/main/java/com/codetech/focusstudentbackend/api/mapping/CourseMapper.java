@@ -5,10 +5,9 @@ import com.codetech.focusstudentbackend.core.entities.Course;
 import com.codetech.focusstudentbackend.utils.mapping.EnhancedModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.io.Serializable;
 import java.util.List;
 
-public class CourseMapper implements Serializable {
+public class CourseMapper {
 
     @Autowired
     EnhancedModelMapper mapper;
