@@ -1,31 +1,27 @@
 package com.codetech.focusstudentbackend.utils;
 
-import com.codetech.focusstudentbackend.core.repositories.RolRepository;
+import com.codetech.focusstudentbackend.infraestructure.services.DatabaseService;
 import lombok.AllArgsConstructor;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.io.ClassPathResource;
-import org.springframework.core.io.Resource;
-import org.springframework.jdbc.datasource.init.ResourceDatabasePopulator;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
+import org.springframework.stereotype.Component;
 
-import javax.sql.DataSource;
+import java.sql.Timestamp;
 
-@Configuration
+@Component
 @AllArgsConstructor
 public class DatabaseSeedingConfig {
+    private static final Logger logger = LoggerFactory.getLogger(DatabaseSeedingConfig.class);
 
-    private final RolRepository rolRepository;
+    private DatabaseService databaseService;
 
-    @Bean
-    public ResourceDatabasePopulator resourceDatabasePopulator(DataSource dataSource) {
-
-        if (rolRepository.existsByName("TEACHER"))
-            return null;
-
-        ResourceDatabasePopulator databasePopular = new ResourceDatabasePopulator();
-        Resource dataScript = new ClassPathResource("data.sql");
-        databasePopular.addScript(dataScript);
-        databasePopular.execute(dataSource);
-        return databasePopular;
+    @EventListener
+    public void onApplicationReady(ApplicationReadyEvent event) {
+        String name = event.getApplicationContext().getId();
+        logger.info("Starting Database Seeding Process for {} at {}", name, new Timestamp(System.currentTimeMillis()));
+        databaseService.seedRol();
+        logger.info("Finished Database Seeding Process for {} at {}", name, new Timestamp(System.currentTimeMillis()));
     }
 }

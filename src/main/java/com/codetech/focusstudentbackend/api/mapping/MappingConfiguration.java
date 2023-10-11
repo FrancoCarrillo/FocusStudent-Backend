@@ -16,4 +16,8 @@ public class MappingConfiguration {
         return new DetectorMapper();
     }
 
+    @Bean
+    public CourseSectionMapper courseSectionMapper() {
+        return new CourseSectionMapper();
+    }
 }

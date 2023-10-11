@@ -14,16 +14,15 @@ import javax.persistence.*;
 public class CourseSection {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    public Long id;
-
-
-    @ManyToOne
-    public Course course;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
     @ManyToOne
-    public Section section;
+    private Course course;
 
     @ManyToOne
-    public Teacher teacher;
+    private Section section;
+
+    @ManyToOne
+    private Teacher teacher;
 }

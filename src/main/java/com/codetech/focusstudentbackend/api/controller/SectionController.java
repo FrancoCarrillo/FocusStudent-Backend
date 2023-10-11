@@ -1,6 +1,5 @@
 package com.codetech.focusstudentbackend.api.controller;
 
-import com.codetech.focusstudentbackend.api.model.requests.AddCourseToSection;
 import com.codetech.focusstudentbackend.api.model.requests.CreateSectionRequest;
 import com.codetech.focusstudentbackend.api.model.responses.MessageResponse;
 import com.codetech.focusstudentbackend.infraestructure.interfaces.ISectionService;

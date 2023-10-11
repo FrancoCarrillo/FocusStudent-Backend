@@ -16,7 +16,7 @@ import java.util.Arrays;
 public class DatabaseService {
     private RolRepository rolRepository;
 
-    private static final String[] DEFAULT_ROLES = {"STUDENT", "TEACHER", "ADMIN"};
+    private static final String[] DEFAULT_ROLES = {"STUDENT", "TEACHER"};
 
     public void seedRol() {
         Arrays.stream(DEFAULT_ROLES).forEach(name -> {
