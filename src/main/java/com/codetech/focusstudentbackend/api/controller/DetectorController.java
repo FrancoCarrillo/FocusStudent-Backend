@@ -40,13 +40,13 @@ public class DetectorController {
 
     @Operation(summary = "Update a detector")
     @PutMapping("{detectorId}")
-    public ResponseEntity<DetectorResponse> addCourseToSection(@PathVariable Long detectorId, @RequestBody UpdateDetectorRequest request) {
+    public ResponseEntity<DetectorResponse> update(@PathVariable Long detectorId, @RequestBody UpdateDetectorRequest request) {
         return ResponseEntity.ok(detectorService.update(detectorId, request));
     }
 
     @Operation(summary = "Delete a detector")
     @DeleteMapping("{detectorId}")
-    public ResponseEntity<MessageResponse> addCourseToSection(@PathVariable Long detectorId) {
+    public ResponseEntity<MessageResponse> delete(@PathVariable Long detectorId) {
         return ResponseEntity.ok(new MessageResponse(detectorService.delete(detectorId)));
     }
 }

@@ -14,7 +14,7 @@ public interface ISectionService {
 
     String create(CreateSectionRequest request);
 
-    SectionResponse update(Long courseId, UpdateSectionRequest request);
+    SectionResponse update(Long sectionId, UpdateSectionRequest request);
 
     String delete(Long sectionId);
 

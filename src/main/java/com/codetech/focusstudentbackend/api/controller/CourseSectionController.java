@@ -23,17 +23,19 @@ public class CourseSectionController {
 
     private final ICourseSectionService courseSectionService;
 
-    @Operation(summary = "Create a course section")
+    @Operation(summary = "Create a course-section")
     @PostMapping()
     public ResponseEntity<MessageResponse> create(@RequestBody CreateCourseSectionRequest request) {
         return ResponseEntity.ok(new MessageResponse(courseSectionService.create(request)));
     }
 
+    @Operation(summary = "Get all the course-sections by teacher")
     @GetMapping("/teacher/{teacherId}")
     public ResponseEntity<List<CourseSectionResponse>> getAllByTeacherId(@PathVariable Long teacherId) {
         return ResponseEntity.ok(courseSectionService.getAllByTeacherId(teacherId));
     }
 
+    @Operation(summary = "Get all the course-sections by section")
     @GetMapping("/section/{sectionId}")
     public ResponseEntity<List<CourseSectionResponse>> getAllBySectionId(@PathVariable Long sectionId) {
         return ResponseEntity.ok(courseSectionService.getAllBySectionId(sectionId));

@@ -1,5 +1,6 @@
 package com.codetech.focusstudentbackend.infraestructure.services;
 
+import com.codetech.focusstudentbackend.api.mapping.SectionMapper;
 import com.codetech.focusstudentbackend.api.model.requests.CreateSectionRequest;
 import com.codetech.focusstudentbackend.api.model.requests.UpdateSectionRequest;
 import com.codetech.focusstudentbackend.api.model.responses.SectionResponse;
@@ -26,15 +27,17 @@ public class SectionService implements ISectionService {
     private final SectionRepository sectionRepository;
     private final CourseRepository courseRepository;
     private final Validator validator;
+    private final SectionMapper sectionMapper;
 
     @Override
     public List<SectionResponse> getAll() {
-        return null;
+        return sectionMapper.modelToList(sectionRepository.findAll());
     }
 
     @Override
     public SectionResponse getById(Long sectionId) {
-        return null;
+        Section section = sectionRepository.findById(sectionId).orElseThrow(() -> new NotFoundException("Seccion no encontrada"));
+        return sectionMapper.toResponse(section);
     }
 
     @Override
@@ -59,13 +62,32 @@ public class SectionService implements ISectionService {
     }
 
     @Override
-    public SectionResponse update(Long courseId, UpdateSectionRequest request) {
-        return null;
+    public SectionResponse update(Long sectionId, UpdateSectionRequest request) {
+        Set<ConstraintViolation<UpdateSectionRequest>> violations = validator.validate(request);
+
+        if (!violations.isEmpty())
+            throw new NotFoundException(violations.stream().map(ConstraintViolation::getMessage)
+                    .collect(Collectors.joining(", ")));
+
+        Section section = sectionRepository.findById(sectionId).orElseThrow(() -> new NotFoundException("Seccion no encontrada"));
+
+        if (Boolean.TRUE.equals(sectionRepository.existsByName(request.getName())) && !section.getName().equals(request.getName())) {
+            throw new NotFoundException("El nombre ya esta en uso");
+        }
+
+        section.setName(request.getName());
+
+        return sectionMapper.toResponse(section);
     }
 
     @Override
     public String delete(Long sectionId) {
-        return null;
+        Section section = sectionRepository.findById(sectionId).orElseThrow(() -> new NotFoundException("Seccion no encontrada"));
+
+        sectionRepository.delete(section);
+
+        return "Seccion eliminada con exito!";
+
     }
 
 }
