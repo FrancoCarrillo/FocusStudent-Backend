@@ -4,7 +4,6 @@ import com.codetech.focusstudentbackend.api.mapping.DetectorMapper;
 import com.codetech.focusstudentbackend.api.model.requests.CreateDetectorRequest;
 import com.codetech.focusstudentbackend.api.model.requests.UpdateDetectorRequest;
 import com.codetech.focusstudentbackend.api.model.responses.DetectorResponse;
-import com.codetech.focusstudentbackend.api.model.responses.UpdateCourseResponse;
 import com.codetech.focusstudentbackend.core.entities.Detector;
 import com.codetech.focusstudentbackend.core.entities.Lesson;
 import com.codetech.focusstudentbackend.core.entities.Student;

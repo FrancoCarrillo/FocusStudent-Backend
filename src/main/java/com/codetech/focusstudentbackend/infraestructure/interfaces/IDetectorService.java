@@ -3,7 +3,6 @@ package com.codetech.focusstudentbackend.infraestructure.interfaces;
 import com.codetech.focusstudentbackend.api.model.requests.CreateDetectorRequest;
 import com.codetech.focusstudentbackend.api.model.requests.UpdateDetectorRequest;
 import com.codetech.focusstudentbackend.api.model.responses.DetectorResponse;
-import com.codetech.focusstudentbackend.api.model.responses.UpdateCourseResponse;
 
 import java.util.List;
 

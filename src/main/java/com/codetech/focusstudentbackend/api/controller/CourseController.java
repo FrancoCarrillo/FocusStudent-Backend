@@ -4,7 +4,6 @@ import com.codetech.focusstudentbackend.api.model.requests.CreateCourserRequest;
 import com.codetech.focusstudentbackend.api.model.requests.UpdateCourseRequest;
 import com.codetech.focusstudentbackend.api.model.responses.CourseResponse;
 import com.codetech.focusstudentbackend.api.model.responses.MessageResponse;
-import com.codetech.focusstudentbackend.api.model.responses.UpdateCourseResponse;
 import com.codetech.focusstudentbackend.infraestructure.interfaces.ICourseService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -42,7 +41,7 @@ public class CourseController {
 
     @Operation(summary = "Update a course")
     @PutMapping("{courseId}")
-    public ResponseEntity<UpdateCourseResponse> addCourseToSection(@PathVariable Long courseId, @RequestBody UpdateCourseRequest request) {
+    public ResponseEntity<CourseResponse> addCourseToSection(@PathVariable Long courseId, @RequestBody UpdateCourseRequest request) {
         return ResponseEntity.ok(courseService.update(courseId, request));
     }
 

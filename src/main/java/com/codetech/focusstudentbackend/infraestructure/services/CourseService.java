@@ -4,7 +4,6 @@ import com.codetech.focusstudentbackend.api.mapping.CourseMapper;
 import com.codetech.focusstudentbackend.api.model.requests.CreateCourserRequest;
 import com.codetech.focusstudentbackend.api.model.requests.UpdateCourseRequest;
 import com.codetech.focusstudentbackend.api.model.responses.CourseResponse;
-import com.codetech.focusstudentbackend.api.model.responses.UpdateCourseResponse;
 import com.codetech.focusstudentbackend.core.entities.Course;
 import com.codetech.focusstudentbackend.core.repositories.CourseRepository;
 import com.codetech.focusstudentbackend.infraestructure.interfaces.ICourseService;
@@ -66,7 +65,7 @@ public class CourseService implements ICourseService {
     }
 
     @Override
-    public UpdateCourseResponse update(Long courseId, UpdateCourseRequest request) {
+    public CourseResponse update(Long courseId, UpdateCourseRequest request) {
         Set<ConstraintViolation<UpdateCourseRequest>> violations = validator.validate(request);
 
         if (!violations.isEmpty())
@@ -82,8 +81,8 @@ public class CourseService implements ICourseService {
 
         courseRepository.save(course);
 
-        return new UpdateCourseResponse(course.getId(), course.getYear(), course.getName(),
-                course.getDescription(), course.getTeachers(), course.getSections(), course.getLessons());
+        return courseMapper.toResponse(course);
+
     }
 
     @Override
