@@ -3,6 +3,7 @@ package com.codetech.focusstudentbackend.core.entities;
 import lombok.*;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity(name = "course_section")
 @Getter
@@ -25,4 +26,7 @@ public class CourseSection {
 
     @ManyToOne
     private Teacher teacher;
+
+    @OneToMany(mappedBy = "courseSection")
+    private List<Lesson> lessons;
 }

@@ -30,4 +30,9 @@ public class MappingConfiguration {
     public SectionMapper sectionMapper() {
         return new SectionMapper();
     }
+
+    @Bean
+    public LessonMapper lessonMapper() {
+        return new LessonMapper();
+    }
 }

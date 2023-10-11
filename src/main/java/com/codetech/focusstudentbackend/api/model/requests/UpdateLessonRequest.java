@@ -9,8 +9,7 @@ import java.util.Date;
 
 @Getter
 @Setter
-public class CreateLessonRequest {
-
+public class UpdateLessonRequest {
     @NotNull
     private Long courseSectionId;
 

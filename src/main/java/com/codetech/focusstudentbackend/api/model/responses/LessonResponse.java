@@ -2,6 +2,8 @@ package com.codetech.focusstudentbackend.api.model.responses;
 
 import lombok.*;
 
+import java.util.Date;
+
 @Getter
 @Setter
 @With
@@ -9,5 +11,8 @@ import lombok.*;
 @AllArgsConstructor
 public class LessonResponse {
     private Long id;
-    private CourseResponse course;
+    private CourseSectionResponse courseSection;
+    private String name;
+    private Date initialTime;
+    private Date finalTime;
 }
