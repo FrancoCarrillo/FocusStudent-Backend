@@ -128,6 +128,12 @@ public class SecurityService implements ISecurityService {
 
                 teacherRepository.save(teacher);
             }
+            case "admin" -> {
+                user.setRole(rolRepository.findByName("ADMIN"));
+
+                userRepository.save(user);
+
+            }
             default -> throw new NotFoundException("El email no es valido");
 
         }
