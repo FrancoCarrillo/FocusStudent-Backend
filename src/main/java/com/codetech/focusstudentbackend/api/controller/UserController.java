@@ -1,9 +1,11 @@
 package com.codetech.focusstudentbackend.api.controller;
 
-import com.codetech.focusstudentbackend.api.model.requests.LoginRequest;
 import com.codetech.focusstudentbackend.api.model.requests.CreateUserRequest;
+import com.codetech.focusstudentbackend.api.model.requests.LoginRequest;
+import com.codetech.focusstudentbackend.api.model.requests.UpdateUserRequest;
 import com.codetech.focusstudentbackend.api.model.responses.LogInResponse;
 import com.codetech.focusstudentbackend.api.model.responses.MessageResponse;
+import com.codetech.focusstudentbackend.api.model.responses.UserResponse;
 import com.codetech.focusstudentbackend.infraestructure.interfaces.ISecurityService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -17,18 +19,24 @@ import org.springframework.web.bind.annotation.*;
 @Tag(name = "User")
 public class UserController {
 
+    private final ISecurityService securityService;
+
     @Operation(summary = "Login in system")
     @PostMapping("auth/login")
     public ResponseEntity<LogInResponse> login(@RequestBody LoginRequest loginRequest) {
         return ResponseEntity.ok(securityService.login(loginRequest));
     }
 
-    private final ISecurityService securityService;
-
     @Operation(summary = "Register in system")
     @PostMapping("auth/register")
     public ResponseEntity<MessageResponse> register(@RequestBody CreateUserRequest signUpRequest) {
         return ResponseEntity.ok(new MessageResponse(securityService.register(signUpRequest)));
+    }
+
+    @Operation(summary = "Update user")
+    @PutMapping("{userId}")
+    public ResponseEntity<UserResponse> update(@PathVariable Long userId, @RequestBody UpdateUserRequest request) {
+        return ResponseEntity.ok(securityService.update(userId, request));
     }
 
 }

@@ -41,4 +41,9 @@ public class MappingConfiguration {
         return new TeacherMapper();
     }
 
+    @Bean
+    public UserMapper userMapper() {
+        return new UserMapper();
+    }
+
 }
