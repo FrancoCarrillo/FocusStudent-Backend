@@ -15,7 +15,7 @@ import java.util.Set;
 @Builder
 public class Lesson {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private Date initialTime;
