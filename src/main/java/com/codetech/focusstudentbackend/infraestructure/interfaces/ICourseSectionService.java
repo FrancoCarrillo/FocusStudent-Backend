@@ -14,7 +14,7 @@ public interface ICourseSectionService {
 
         String create(CreateCourseSectionRequest request);
 
-        CourseSectionResponse update(UpdateCourseSectionRequest request);
+        CourseSectionResponse update(Long courseSectionId,UpdateCourseSectionRequest request);
 
         String delete(Long courseSectionId);
 

@@ -2,9 +2,7 @@ package com.codetech.focusstudentbackend.infraestructure.services;
 
 import com.codetech.focusstudentbackend.api.mapping.CourseSectionMapper;
 import com.codetech.focusstudentbackend.api.model.requests.CreateCourseSectionRequest;
-import com.codetech.focusstudentbackend.api.model.requests.UpdateCourseRequest;
 import com.codetech.focusstudentbackend.api.model.requests.UpdateCourseSectionRequest;
-import com.codetech.focusstudentbackend.api.model.responses.CourseResponse;
 import com.codetech.focusstudentbackend.api.model.responses.CourseSectionResponse;
 import com.codetech.focusstudentbackend.core.entities.Course;
 import com.codetech.focusstudentbackend.core.entities.CourseSection;
@@ -40,12 +38,13 @@ public class CourseSectionService implements ICourseSectionService {
 
     @Override
     public List<CourseSectionResponse> getAll() {
-        return null;
+        return courseSectionMapper.modelToList(courseSectionRepository.findAll());
     }
 
     @Override
     public CourseSectionResponse getById(Long courseSectionId) {
-        return null;
+        return courseSectionMapper.toResponse(courseSectionRepository.findById(courseSectionId)
+                .orElseThrow(() -> new NotFoundException("Sección de curso no encontrado con el id: " + courseSectionId)));
     }
 
     @Override
@@ -73,13 +72,32 @@ public class CourseSectionService implements ICourseSectionService {
     }
 
     @Override
-    public CourseSectionResponse update(UpdateCourseSectionRequest request) {
-        return null;
+    public CourseSectionResponse update(Long courseSectionId, UpdateCourseSectionRequest request) {
+        Set<ConstraintViolation<UpdateCourseSectionRequest>> violations = validator.validate(request);
+
+        if (!violations.isEmpty())
+            throw new NotFoundException(violations.stream().map(ConstraintViolation::getMessage)
+                    .collect(Collectors.joining(", ")));
+
+        Teacher teacher = teacherRepository.findById(request.getTeacherId()).orElseThrow(() -> new NotFoundException("Profesor no encontrado con el id: " + request.getTeacherId()));
+        Course course = courseRepository.findById(request.getCourseId()).orElseThrow(() -> new NotFoundException("Curso no encontrado con el id: " + request.getCourseId()));
+        Section section = sectionRepository.findById(request.getSectionId()).orElseThrow(() -> new NotFoundException("Sección no encontrada con el id: " + request.getSectionId()));
+        CourseSection courseSection = courseSectionRepository.findById(courseSectionId).orElseThrow(() -> new NotFoundException("Sección de curso no encontrado con el id: " + courseSectionId));
+
+        courseSection.setTeacher(teacher);
+        courseSection.setCourse(course);
+        courseSection.setSection(section);
+
+        courseSectionRepository.save(courseSection);
+
+        return courseSectionMapper.toResponse(courseSection);
     }
 
     @Override
     public String delete(Long courseSectionId) {
-        return null;
+        CourseSection courseSection = courseSectionRepository.findById(courseSectionId).orElseThrow(() -> new NotFoundException("Sección de curso no encontrado con el id: " + courseSectionId));
+        courseSectionRepository.delete(courseSection);
+        return "Sección de curso eliminado con exito!";
     }
 
     @Override
