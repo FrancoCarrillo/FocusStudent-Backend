@@ -35,4 +35,10 @@ public class MappingConfiguration {
     public LessonMapper lessonMapper() {
         return new LessonMapper();
     }
+
+    @Bean
+    public TeacherMapper teacherMapper() {
+        return new TeacherMapper();
+    }
+
 }
