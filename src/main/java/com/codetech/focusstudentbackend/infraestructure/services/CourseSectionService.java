@@ -75,31 +75,37 @@ public class CourseSectionService implements ICourseSectionService {
     }
 
     @Override
-    public CourseSectionResponse update(Long courseSectionId, UpdateCourseSectionRequest request) {
-        Set<ConstraintViolation<UpdateCourseSectionRequest>> violations = validator.validate(request);
+    public String update(List<UpdateCourseSectionRequest> request) {
+        Set<ConstraintViolation<List<UpdateCourseSectionRequest>>> violations = validator.validate(request);
 
         if (!violations.isEmpty())
             throw new NotFoundException(violations.stream().map(ConstraintViolation::getMessage)
                     .collect(Collectors.joining(", ")));
 
-        Teacher teacher = teacherRepository.findById(request.getTeacherId()).orElseThrow(() -> new NotFoundException("Profesor no encontrado con el id: " + request.getTeacherId()));
-        Course course = courseRepository.findById(request.getCourseId()).orElseThrow(() -> new NotFoundException("Curso no encontrado con el id: " + request.getCourseId()));
-        Section section = sectionRepository.findById(request.getSectionId()).orElseThrow(() -> new NotFoundException("Sección no encontrada con el id: " + request.getSectionId()));
-        CourseSection courseSection = courseSectionRepository.findById(courseSectionId).orElseThrow(() -> new NotFoundException("Sección de curso no encontrado con el id: " + courseSectionId));
+        request.forEach(courseSectionRequest -> {
+            Teacher teacher = teacherRepository.findById(courseSectionRequest.getTeacherId()).orElseThrow(() -> new NotFoundException("Profesor no encontrado con el id: " + courseSectionRequest.getTeacherId()));
+            Course course = courseRepository.findById(courseSectionRequest.getCourseId()).orElseThrow(() -> new NotFoundException("Curso no encontrado con el id: " + courseSectionRequest.getCourseId()));
+            Section section = sectionRepository.findById(courseSectionRequest.getSectionId()).orElseThrow(() -> new NotFoundException("Sección no encontrada con el id: " + courseSectionRequest.getSectionId()));
+            CourseSection courseSection = courseSectionRepository.findById(courseSectionRequest.getCourseSectionId()).orElseThrow(() -> new NotFoundException("Sección de curso no encontrado con el id: " + courseSectionRequest.getCourseSectionId()));
 
-        courseSection.setTeacher(teacher);
-        courseSection.setCourse(course);
-        courseSection.setSection(section);
+            courseSection.setTeacher(teacher);
+            courseSection.setCourse(course);
+            courseSection.setSection(section);
 
-        courseSectionRepository.save(courseSection);
+            courseSectionRepository.save(courseSection);
+        });
 
-        return courseSectionMapper.toResponse(courseSection);
+        return "Sección de curso actualizado con exito!";
     }
 
     @Override
-    public String delete(Long courseSectionId) {
-        CourseSection courseSection = courseSectionRepository.findById(courseSectionId).orElseThrow(() -> new NotFoundException("Sección de curso no encontrado con el id: " + courseSectionId));
-        courseSectionRepository.delete(courseSection);
+    public String delete(List<Long> courseSectionId) {
+
+        courseSectionId.forEach(id -> {
+            CourseSection courseSection = courseSectionRepository.findById(id).orElseThrow(() -> new NotFoundException("Sección de curso no encontrado con el id: " + id));
+            courseSectionRepository.delete(courseSection);
+        });
+
         return "Sección de curso eliminado con exito!";
     }
 

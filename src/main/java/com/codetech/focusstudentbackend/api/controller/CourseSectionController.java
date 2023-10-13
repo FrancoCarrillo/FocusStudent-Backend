@@ -34,14 +34,14 @@ public class CourseSectionController {
     }
 
     @Operation(summary = "Update a course-sections")
-    @PutMapping("{courseSectionId}")
-    public ResponseEntity<CourseSectionResponse> update(@PathVariable Long courseSectionId, @RequestBody UpdateCourseSectionRequest request) {
-        return ResponseEntity.ok(courseSectionService.update(courseSectionId, request));
+    @PutMapping()
+    public ResponseEntity<MessageResponse> update(@RequestBody List<UpdateCourseSectionRequest> request) {
+        return ResponseEntity.ok(new MessageResponse(courseSectionService.update(request)));
     }
 
     @Operation(summary = "Delete a course-sections")
     @DeleteMapping("{courseSectionId}")
-    public ResponseEntity<MessageResponse> delete(@PathVariable Long courseSectionId) {
+    public ResponseEntity<MessageResponse> delete(@RequestBody List<Long> courseSectionId) {
         return ResponseEntity.ok(new MessageResponse(courseSectionService.delete(courseSectionId)));
     }
 

@@ -14,4 +14,6 @@ public class UpdateCourseSectionRequest {
     private Long sectionId;
     @NotNull
     private Long teacherId;
+    @NotNull
+    Long courseSectionId;
 }
