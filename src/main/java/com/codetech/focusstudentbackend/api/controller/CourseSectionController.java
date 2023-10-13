@@ -47,7 +47,7 @@ public class CourseSectionController {
 
     @Operation(summary = "Create a course-section")
     @PostMapping()
-    public ResponseEntity<MessageResponse> create(@RequestBody CreateCourseSectionRequest request) {
+    public ResponseEntity<MessageResponse> create(@RequestBody List<CreateCourseSectionRequest> request) {
         return ResponseEntity.ok(new MessageResponse(courseSectionService.create(request)));
     }
 

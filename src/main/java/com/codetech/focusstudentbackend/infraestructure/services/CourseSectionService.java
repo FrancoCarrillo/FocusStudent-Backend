@@ -48,26 +48,29 @@ public class CourseSectionService implements ICourseSectionService {
     }
 
     @Override
-    public String create(CreateCourseSectionRequest request) {
-        Set<ConstraintViolation<CreateCourseSectionRequest>> violations = validator.validate(request);
+    public String create(List<CreateCourseSectionRequest> request) {
+        Set<ConstraintViolation<List<CreateCourseSectionRequest>>> violations = validator.validate(request);
 
         if (!violations.isEmpty())
             throw new NotFoundException(violations.stream().map(ConstraintViolation::getMessage)
                     .collect(Collectors.joining(", ")));
 
-        Teacher teacher = teacherRepository.findById(request.getTeacherId()).orElseThrow(() -> new NotFoundException("Profesor no encontrado con el id: " + request.getTeacherId()));
-        Course course = courseRepository.findById(request.getCourseId()).orElseThrow(() -> new NotFoundException("Curso no encontrado con el id: " + request.getCourseId()));
-        Section section = sectionRepository.findById(request.getSectionId()).orElseThrow(() -> new NotFoundException("Sección no encontrada con el id: " + request.getSectionId()));
+        request.forEach(courseSectionRequest -> {
+            Teacher teacher = teacherRepository.findById(courseSectionRequest.getTeacherId()).orElseThrow(() -> new NotFoundException("Profesor no encontrado con el id: " + courseSectionRequest.getTeacherId()));
+            Course course = courseRepository.findById(courseSectionRequest.getCourseId()).orElseThrow(() -> new NotFoundException("Curso no encontrado con el id: " + courseSectionRequest.getCourseId()));
+            Section section = sectionRepository.findById(courseSectionRequest.getSectionId()).orElseThrow(() -> new NotFoundException("Sección no encontrada con el id: " + courseSectionRequest.getSectionId()));
 
-        CourseSection courseSection = CourseSection.builder()
-                .teacher(teacher)
-                .course(course)
-                .section(section)
-                .build();
+            CourseSection courseSection = CourseSection.builder()
+                    .teacher(teacher)
+                    .course(course)
+                    .section(section)
+                    .build();
 
-        courseSectionRepository.save(courseSection);
+            courseSectionRepository.save(courseSection);
 
-        return "Sección creada con exito!";
+        });
+
+        return "Secciónes creadas con exito!";
 
     }
 

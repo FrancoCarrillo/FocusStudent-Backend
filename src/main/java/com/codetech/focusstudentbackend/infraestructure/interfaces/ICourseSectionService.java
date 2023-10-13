@@ -12,7 +12,7 @@ public interface ICourseSectionService {
         List<CourseSectionResponse> getAll();
         CourseSectionResponse getById(Long courseSectionId);
 
-        String create(CreateCourseSectionRequest request);
+        String create(List<CreateCourseSectionRequest> request);
 
         CourseSectionResponse update(Long courseSectionId,UpdateCourseSectionRequest request);
 
