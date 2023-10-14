@@ -1,9 +1,11 @@
 package com.codetech.focusstudentbackend.core.repositories;
 
+import com.codetech.focusstudentbackend.core.entities.Role;
 import com.codetech.focusstudentbackend.core.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository

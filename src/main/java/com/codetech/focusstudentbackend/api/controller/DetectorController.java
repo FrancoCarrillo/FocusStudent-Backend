@@ -38,12 +38,6 @@ public class DetectorController {
         return ResponseEntity.ok(new MessageResponse(detectorService.create(request)));
     }
 
-    @Operation(summary = "Update a detector")
-    @PutMapping("{detectorId}")
-    public ResponseEntity<DetectorResponse> update(@PathVariable Long detectorId, @RequestBody UpdateDetectorRequest request) {
-        return ResponseEntity.ok(detectorService.update(detectorId, request));
-    }
-
     @Operation(summary = "Delete a detector")
     @DeleteMapping("{detectorId}")
     public ResponseEntity<MessageResponse> delete(@PathVariable Long detectorId) {

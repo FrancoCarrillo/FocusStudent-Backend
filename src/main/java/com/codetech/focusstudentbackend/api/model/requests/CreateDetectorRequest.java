@@ -1,30 +1,26 @@
 package com.codetech.focusstudentbackend.api.model.requests;
 
+import com.codetech.focusstudentbackend.core.entities.Analysis;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter
 public class CreateDetectorRequest {
 
-    @NotEmpty
     @NotNull
-    private String initialState;
-
-    @NotEmpty
-    @NotNull
-    private String middleState;
-
-    @NotEmpty
-    @NotNull
-    private String finalState;
+    private Date start;
 
     @NotNull
-    private Date detectionDate;
+    private Date end;
+
+    @NotNull
+    private List<CreateAnalysisRequest> analyses;
 
     @NotNull
     private Long studentId;

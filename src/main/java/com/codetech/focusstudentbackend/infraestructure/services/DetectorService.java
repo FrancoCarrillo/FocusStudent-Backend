@@ -4,9 +4,11 @@ import com.codetech.focusstudentbackend.api.mapping.DetectorMapper;
 import com.codetech.focusstudentbackend.api.model.requests.CreateDetectorRequest;
 import com.codetech.focusstudentbackend.api.model.requests.UpdateDetectorRequest;
 import com.codetech.focusstudentbackend.api.model.responses.DetectorResponse;
+import com.codetech.focusstudentbackend.core.entities.Analysis;
 import com.codetech.focusstudentbackend.core.entities.Detector;
 import com.codetech.focusstudentbackend.core.entities.Lesson;
 import com.codetech.focusstudentbackend.core.entities.Student;
+import com.codetech.focusstudentbackend.core.repositories.AnalysisRepository;
 import com.codetech.focusstudentbackend.core.repositories.DetectorRepository;
 import com.codetech.focusstudentbackend.core.repositories.LessonRepository;
 import com.codetech.focusstudentbackend.core.repositories.StudentRepository;
@@ -18,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -31,6 +34,7 @@ public class DetectorService implements IDetectorService {
     private final DetectorRepository detectorRepository;
     private final StudentRepository studentRepository;
     private final LessonRepository lessonRepository;
+    private final AnalysisRepository analysisRepository;
     private final DetectorMapper detectorMapper;
 
     @Override
@@ -59,42 +63,30 @@ public class DetectorService implements IDetectorService {
         Lesson lesson = lessonRepository.findById(request.getLessonId()).orElseThrow(() -> new NotFoundException("Leccion no encontrado con el id: " + request.getLessonId()));
 
         Detector detector = Detector.builder()
-                .initialState(request.getInitialState())
-                .middleState(request.getMiddleState())
-                .finalState(request.getFinalState())
-                .detectionDate(request.getDetectionDate())
+                .start(request.getStart())
+                .end(request.getEnd())
                 .student(student)
                 .lesson(lesson)
                 .build();
 
-        detectorRepository.save(detector);
+        Detector newDetector = detectorRepository.save(detector);
+
+        request.getAnalyses().forEach(analysis -> {
+            Analysis newAnalysis = Analysis.builder()
+                    .timeStatus(analysis.getTimeStatus())
+                    .concentrateStatus(analysis.getConcentrateStatus())
+                    .faceStatus(analysis.getFaceStatus())
+                    .detector(newDetector)
+                    .build();
+
+            analysisRepository.save(newAnalysis);
+        });
+
 
         return "Detector creado con exito!";
 
     }
 
-    @Override
-    public DetectorResponse update(Long detectorId, UpdateDetectorRequest request) {
-        Set<ConstraintViolation<UpdateDetectorRequest>> violations = validator.validate(request);
-
-        if (!violations.isEmpty())
-            throw new NotFoundException(violations.stream().map(ConstraintViolation::getMessage)
-                    .collect(Collectors.joining(", ")));
-
-        Detector detector = detectorRepository.findById(detectorId).orElseThrow(() -> new NotFoundException("Detector no encontrado"));
-        Student student = studentRepository.findById(request.getStudentId()).orElseThrow(() -> new NotFoundException("Estudiante no encontrado con el id: " + request.getStudentId()));
-        Lesson lesson = lessonRepository.findById(request.getLessonId()).orElseThrow(() -> new NotFoundException("Leccion no encontrado con el id: " + request.getLessonId()));
-
-        detector.setInitialState(request.getInitialState());
-        detector.setMiddleState(request.getMiddleState());
-        detector.setFinalState(request.getFinalState());
-        detector.setStudent(student);
-        detector.setLesson(lesson);
-        detectorRepository.save(detector);
-
-        return detectorMapper.toResponse(detector);
-
-    }
 
     @Override
     public String delete(Long detectorId) {

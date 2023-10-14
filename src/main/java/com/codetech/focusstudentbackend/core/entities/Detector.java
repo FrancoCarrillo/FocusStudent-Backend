@@ -4,6 +4,9 @@ import lombok.*;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 @Entity(name = "detector")
 @Getter
@@ -16,10 +19,11 @@ public class Detector {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String initialState;
-    private String middleState;
-    private String finalState;
-    private Date detectionDate;
+    private Date start;
+    private Date end;
+
+    @OneToMany(mappedBy = "detector")
+    Set<Analysis> analysis = new HashSet<>();
 
     @ManyToOne
     private Student student;

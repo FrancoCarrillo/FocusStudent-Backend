@@ -6,6 +6,8 @@ import com.codetech.focusstudentbackend.api.model.requests.UpdateUserRequest;
 import com.codetech.focusstudentbackend.api.model.responses.LogInResponse;
 import com.codetech.focusstudentbackend.api.model.responses.UserResponse;
 
+import java.util.List;
+
 public interface ISecurityService {
 
     LogInResponse login(LoginRequest loginRequest);

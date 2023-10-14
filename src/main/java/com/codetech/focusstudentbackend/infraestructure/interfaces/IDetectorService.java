@@ -12,7 +12,5 @@ public interface IDetectorService {
 
     String create(CreateDetectorRequest request);
 
-    DetectorResponse update(Long detectorId, UpdateDetectorRequest request);
-
     String delete(Long detectorId);
 }
