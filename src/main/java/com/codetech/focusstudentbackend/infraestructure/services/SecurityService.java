@@ -1,16 +1,12 @@
 package com.codetech.focusstudentbackend.infraestructure.services;
 
 import com.codetech.focusstudentbackend.api.mapping.UserMapper;
-import com.codetech.focusstudentbackend.api.model.requests.LoginRequest;
 import com.codetech.focusstudentbackend.api.model.requests.CreateUserRequest;
-import com.codetech.focusstudentbackend.api.model.requests.UpdateDetectorRequest;
+import com.codetech.focusstudentbackend.api.model.requests.LoginRequest;
 import com.codetech.focusstudentbackend.api.model.requests.UpdateUserRequest;
 import com.codetech.focusstudentbackend.api.model.responses.LogInResponse;
 import com.codetech.focusstudentbackend.api.model.responses.UserResponse;
-import com.codetech.focusstudentbackend.core.entities.Section;
-import com.codetech.focusstudentbackend.core.entities.Student;
-import com.codetech.focusstudentbackend.core.entities.Teacher;
-import com.codetech.focusstudentbackend.core.entities.User;
+import com.codetech.focusstudentbackend.core.entities.*;
 import com.codetech.focusstudentbackend.core.repositories.*;
 import com.codetech.focusstudentbackend.infraestructure.interfaces.ISecurityService;
 import com.codetech.focusstudentbackend.utils.exceptions.NotFoundException;
@@ -26,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
+import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -212,6 +209,14 @@ public class SecurityService implements ISecurityService {
 
         return userMapper.toResponse(user);
 
+    }
+
+    @Override
+    public List<UserResponse> getAllUsersByLastNameAndRol(String lastName, String rol) {
+
+        Role role = rolRepository.findByName(rol);
+
+        return userMapper.modelToList(userRepository.findAllByRoleAndLastNames(role, lastName));
     }
 
 }

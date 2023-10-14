@@ -13,6 +13,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("api/user")
 @AllArgsConstructor
@@ -20,6 +22,12 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
 
     private final ISecurityService securityService;
+
+    @Operation(summary = "Get all users by lastnames and role")
+    @GetMapping("rol/{role}/lastNames/{lastNames}")
+    public ResponseEntity<List<UserResponse>> getAllByRoleAndLastNames(@PathVariable String role, @PathVariable String lastNames) {
+        return ResponseEntity.ok(securityService.getAllUsersByLastNameAndRol(lastNames, role));
+    }
 
     @Operation(summary = "Login in system")
     @PostMapping("auth/login")
@@ -38,5 +46,6 @@ public class UserController {
     public ResponseEntity<UserResponse> update(@PathVariable Long userId, @RequestBody UpdateUserRequest request) {
         return ResponseEntity.ok(securityService.update(userId, request));
     }
+
 
 }
