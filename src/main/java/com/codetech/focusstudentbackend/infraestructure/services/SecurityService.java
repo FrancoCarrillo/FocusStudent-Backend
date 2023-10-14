@@ -219,4 +219,17 @@ public class SecurityService implements ISecurityService {
         return userMapper.modelToList(userRepository.findAllByRoleAndLastNames(role, lastName));
     }
 
+    @Override
+    public String changePassword(Long userId, String password) {
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
+
+        user.setPassword(encoder.encode(password));
+
+        userRepository.save(user);
+
+        return "Contraseña cambiada con exito";
+
+    }
+
 }

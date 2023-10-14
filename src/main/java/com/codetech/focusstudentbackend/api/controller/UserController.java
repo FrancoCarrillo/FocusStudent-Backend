@@ -1,5 +1,6 @@
 package com.codetech.focusstudentbackend.api.controller;
 
+import com.codetech.focusstudentbackend.api.model.requests.ChangePasswordRequest;
 import com.codetech.focusstudentbackend.api.model.requests.CreateUserRequest;
 import com.codetech.focusstudentbackend.api.model.requests.LoginRequest;
 import com.codetech.focusstudentbackend.api.model.requests.UpdateUserRequest;
@@ -47,5 +48,10 @@ public class UserController {
         return ResponseEntity.ok(securityService.update(userId, request));
     }
 
+    @Operation(summary = "Change password")
+    @PutMapping("{userId}/password")
+    public ResponseEntity<MessageResponse> changePassword(@PathVariable Long userId, @RequestBody ChangePasswordRequest request) {
+        return ResponseEntity.ok(new MessageResponse(securityService.changePassword(userId, request.getPassword())));
+    }
 
 }
