@@ -216,7 +216,7 @@ public class SecurityService implements ISecurityService {
 
         Role role = rolRepository.findByName(rol);
 
-        return userMapper.modelToList(userRepository.findAllByRoleAndLastNames(role, lastName));
+        return userMapper.modelToList(userRepository.findAllByRoleAndLastNamesStartsWith(role, lastName));
     }
 
     @Override
