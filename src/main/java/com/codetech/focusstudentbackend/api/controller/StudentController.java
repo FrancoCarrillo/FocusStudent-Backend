@@ -21,9 +21,15 @@ public class StudentController {
 
     private final IStudentService studentService;
 
+    @Operation(summary = "Get all students")
+    @GetMapping()
+    public ResponseEntity<List<StudentResponse>> getAll() {
+        return ResponseEntity.ok(studentService.getAll());
+    }
+
     @Operation(summary = "Get all the students by section")
     @GetMapping("/{sectionId}")
-    public ResponseEntity<List<StudentResponse>> getAll(@PathVariable Long sectionId) {
+    public ResponseEntity<List<StudentResponse>> getAllBySection(@PathVariable Long sectionId) {
         return ResponseEntity.ok(studentService.getAllBySectionId(sectionId));
     }
 }

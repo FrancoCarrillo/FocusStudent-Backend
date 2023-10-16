@@ -29,4 +29,9 @@ public class StudentService implements IStudentService {
 
         return studentMapper.modelToList(studentRepository.findAllBySectionId(sectionId));
     }
+
+    @Override
+    public List<StudentResponse> getAll() {
+        return studentMapper.modelToList(studentRepository.findAll());
+    }
 }

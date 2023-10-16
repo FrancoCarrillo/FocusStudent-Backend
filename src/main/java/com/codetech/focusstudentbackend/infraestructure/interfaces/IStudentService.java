@@ -7,4 +7,6 @@ import java.util.List;
 public interface IStudentService {
 
     List<StudentResponse> getAllBySectionId(Long sectionId);
+
+    List<StudentResponse> getAll();
 }
