@@ -1,17 +1,17 @@
 package com.codetech.focusstudentbackend.api.model.responses;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
+@Builder
 public class LogInResponse {
     private Long id;
     private String name;
     private String token;
     private String role;
+    private Long studentId;
+    private Long teacherId;
 }

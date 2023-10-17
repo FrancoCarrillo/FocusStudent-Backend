@@ -54,7 +54,55 @@ public class SecurityService implements ISecurityService {
 
         User user = userRepository.findByEmail(loginRequest.getEmail()).orElseThrow();
 
-        return new LogInResponse(user.getId(), user.getNames(), jwt, user.getRole().getName());
+        Pattern pattern = Pattern.compile("_(.*?)@");
+        Matcher matcher = pattern.matcher(user.getEmail());
+
+        if (!matcher.find(1))
+            throw new NotFoundException("El email no es valido");
+
+
+        String userRole = matcher.group(1);
+
+        switch (userRole) {
+            case "estudiante" -> {
+
+                Student student = studentRepository.findByUserId(user.getId()).orElseThrow(() -> new NotFoundException("Estudiante no encontrado"));
+
+                return LogInResponse.builder()
+                        .id(user.getId())
+                        .name(user.getNames())
+                        .token(jwt)
+                        .role(user.getRole().getName())
+                        .studentId(student.getId())
+                        .build();
+
+            }
+            case "profesor" -> {
+
+                Teacher teacher = teacherRepository.findByUserId(user.getId()).orElseThrow(() -> new NotFoundException("Profesor no encontrado"));
+
+                return LogInResponse.builder()
+                        .id(user.getId())
+                        .name(user.getNames())
+                        .token(jwt)
+                        .role(user.getRole().getName())
+                        .teacherId(teacher.getId())
+                        .build();
+            }
+            case "admin" -> {
+
+                return LogInResponse.builder()
+                        .id(user.getId())
+                        .name(user.getNames())
+                        .token(jwt)
+                        .role(user.getRole().getName())
+                        .build();
+
+            }
+            default -> throw new NotFoundException("El email no es valido");
+
+        }
+
     }
 
     @Override
