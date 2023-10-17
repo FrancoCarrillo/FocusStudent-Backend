@@ -50,5 +50,4 @@ public class SectionController {
     public ResponseEntity<MessageResponse> delete(@PathVariable Long sectionId) {
         return ResponseEntity.ok(new MessageResponse(sectionService.delete(sectionId)));
     }
-
 }
