@@ -14,4 +14,5 @@ public class LogInResponse {
     private String role;
     private Long studentId;
     private Long teacherId;
+    private Long sectionId;
 }

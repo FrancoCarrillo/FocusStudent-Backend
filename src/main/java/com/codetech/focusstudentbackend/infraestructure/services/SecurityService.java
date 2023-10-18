@@ -64,7 +64,7 @@ public class SecurityService implements ISecurityService {
         String userRole = matcher.group(1);
 
         switch (userRole) {
-            case "estudiante" -> {
+            case "estudiante": {
 
                 Student student = studentRepository.findByUserId(user.getId()).orElseThrow(() -> new NotFoundException("Estudiante no encontrado"));
 
@@ -74,10 +74,11 @@ public class SecurityService implements ISecurityService {
                         .token(jwt)
                         .role(user.getRole().getName())
                         .studentId(student.getId())
+                        .sectionId(student.getSection().getId())
                         .build();
 
             }
-            case "profesor" -> {
+            case "profesor": {
 
                 Teacher teacher = teacherRepository.findByUserId(user.getId()).orElseThrow(() -> new NotFoundException("Profesor no encontrado"));
 
@@ -89,7 +90,7 @@ public class SecurityService implements ISecurityService {
                         .teacherId(teacher.getId())
                         .build();
             }
-            case "admin" -> {
+            case "admin" : {
 
                 return LogInResponse.builder()
                         .id(user.getId())
@@ -99,7 +100,7 @@ public class SecurityService implements ISecurityService {
                         .build();
 
             }
-            default -> throw new NotFoundException("El email no es valido");
+            default : throw new NotFoundException("El email no es valido");
 
         }
 
@@ -148,7 +149,7 @@ public class SecurityService implements ISecurityService {
         String userRole = matcher.group(1);
 
         switch (userRole) {
-            case "estudiante" -> {
+            case "estudiante" : {
 
                 if (createUserRequest.getSectionId() == null) {
                     throw new NotFoundException("La seccion debe ser ingresada");
@@ -164,9 +165,9 @@ public class SecurityService implements ISecurityService {
                         .user(newUser).build();
 
                 studentRepository.save(student);
-
+                return "Registro de usuario exitoso!";
             }
-            case "profesor" -> {
+            case "profesor" : {
                 user.setRole(rolRepository.findByName("TEACHER"));
 
                 User newUser = userRepository.save(user);
@@ -177,18 +178,19 @@ public class SecurityService implements ISecurityService {
 
 
                 teacherRepository.save(teacher);
+                return "Registro de usuario exitoso!";
             }
-            case "admin" -> {
+            case "admin" : {
                 user.setRole(rolRepository.findByName("ADMIN"));
 
                 userRepository.save(user);
-
+                return "Registro de usuario exitoso!";
             }
-            default -> throw new NotFoundException("El email no es valido");
+            default : throw new NotFoundException("El email no es valido");
 
         }
 
-        return "Registro de usuario exitoso!";
+
     }
 
     @Override
@@ -230,7 +232,7 @@ public class SecurityService implements ISecurityService {
         String userRole = matcher.group(1);
 
         switch (userRole) {
-            case "estudiante" -> {
+            case "estudiante" : {
 
                 if (request.getSectionId() == null) {
                     throw new NotFoundException("La seccion debe ser ingresada");
@@ -245,17 +247,22 @@ public class SecurityService implements ISecurityService {
                 student.setSection(studentSection);
 
                 studentRepository.save(student);
-
+                userRepository.save(user);
+                return userMapper.toResponse(user);
             }
-            case "profesor" -> user.setRole(rolRepository.findByName("TEACHER"));
-            case "admin" -> user.setRole(rolRepository.findByName("ADMIN"));
-            default -> throw new NotFoundException("El email no es valido");
+            case "profesor" : {
+                user.setRole(rolRepository.findByName("TEACHER"));
+                userRepository.save(user);
+                return userMapper.toResponse(user);
+            }
+            case "admin" : {
+                user.setRole(rolRepository.findByName("ADMIN"));
+                userRepository.save(user);
+                return userMapper.toResponse(user);
+            }
+            default : throw new NotFoundException("El email no es valido");
 
         }
-
-        userRepository.save(user);
-
-        return userMapper.toResponse(user);
 
     }
 
