@@ -54,4 +54,10 @@ public class UserController {
         return ResponseEntity.ok(new MessageResponse(securityService.changePassword(userId, request.getPassword())));
     }
 
+    @Operation(summary = "Delete teacher or studen")
+    @DeleteMapping("{userId}")
+    public ResponseEntity<MessageResponse> delete(@PathVariable Long userId) {
+        return ResponseEntity.ok(new MessageResponse(securityService.delete(userId)));
+    }
+
 }

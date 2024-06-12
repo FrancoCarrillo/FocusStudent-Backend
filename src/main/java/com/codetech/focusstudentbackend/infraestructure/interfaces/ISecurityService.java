@@ -19,4 +19,6 @@ public interface ISecurityService {
     List<UserResponse> getAllUsersByLastNameAndRol(String lastName, String rol);
 
     String changePassword(Long userId, String password);
+
+    String delete(Long userId);
 }

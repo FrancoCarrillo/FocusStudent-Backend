@@ -287,4 +287,14 @@ public class SecurityService implements ISecurityService {
 
     }
 
+    @Override
+    public String delete(Long userId) {
+
+        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("Usuario no encontrado"));
+
+        userRepository.delete(user);
+
+        return "Usuario eliminado con exito";
+    }
+
 }
